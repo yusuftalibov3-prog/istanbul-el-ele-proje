@@ -185,7 +185,7 @@ const App: React.FC = () => {
           </p>
           <div className="border-t border-slate-800 pt-8 text-sm flex flex-col gap-2">
             <p>© 2024 İstanbul Dayanışma Portalı. Tüm hakları saklıdır.</p>
-            <p className="text-indigo-400 font-semibold italic">Bu web sitesi 14 yaşındaki bir genç girişimci tarafından yapılmıştır.</p>
+            <p className="text-indigo-400 font-semibold italic">Bu Web Siteyi Yusuf Tolibov Isimli 14 Yaşındaki Genç Girişimci Yapmıştır.</p>
           </div>
         </div>
       </footer>
