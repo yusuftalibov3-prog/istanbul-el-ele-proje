@@ -3,57 +3,67 @@ import { UserRole, SolidarityMessage } from '../types';
 
 interface MessageFormProps {
   role: UserRole;
-  onSubmit: (data: Omit<SolidarityMessage, 'id' | 'createdAt'>) => void;
+  onSubmit: (message: Omit<SolidarityMessage, 'id' | 'createdAt'>) => void;
   isSubmitting: boolean;
 }
 
-const ISTANBUL_DISTRICTS = ["Adalar", "Arnavutköy", "Ataşehir", "Avcılar", "Bağcılar", "Bahçelievler", "Bakırköy", "Başakşehir", "Bayrampaşa", "Beşiktaş", "Beykoz", "Beylikdüzü", "Beyoğlu", "Büyükçekmece", "Çatalca", "Çekmeköy", "Esenler", "Esenyurt", "Eyüpsultan", "Fatih", "Gaziosmanpaşa", "Güngören", "Kadıköy", "Kağıthane", "Kartal", "Küçükçekmece", "Maltepe", "Pendik", "Sancaktepe", "Sarıyer", "Silivri", "Sultanbeyli", "Sultangazi", "Şile", "Şişli", "Tuzla", "Ümraniye", "Üsküdar", "Zeytinburnu"];
-
 const MessageForm: React.FC<MessageFormProps> = ({ role, onSubmit, isSubmitting }) => {
-  const [formData, setFormData] = useState({ fullName: '', phone: '', email: '', district: '', message: '' });
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    district: 'Kadıköy',
+    contact: ''
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if(formData.fullName && formData.district && formData.message) {
-      onSubmit({ ...formData, role });
-    } else {
-      alert("Lütfen tüm alanları doldurun.");
-    }
+    onSubmit({
+      ...formData,
+      type: role === 'İhtiyaç Sahibi' ? 'help' : 'support'
+    });
   };
 
-  const inputStyle = "w-full px-4 py-4 rounded-2xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 outline-none transition-all bg-slate-50/50 text-slate-700 font-medium";
+  const inputClass = "w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700 ml-1">Ad Soyad</label>
-          <input type="text" placeholder="Ahmet Yılmaz" className={inputStyle} value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} />
-        </div>
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700 ml-1">Telefon</label>
-          <input type="tel" placeholder="05xx xxx xx xx" className={inputStyle} value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
-        </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium mb-1 dark:text-slate-300">Başlık</label>
+        <input 
+          required 
+          className={inputClass} 
+          placeholder="Örn: Erzak yardımı, Ders desteği..."
+          value={formData.title}
+          onChange={e => setFormData({...formData, title: e.target.value})}
+        />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700 ml-1">E-posta</label>
-          <input type="email" placeholder="örnek@mail.com" className={inputStyle} value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
-        </div>
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700 ml-1">İlçe</label>
-          <select className={inputStyle} value={formData.district} onChange={e => setFormData({...formData, district: e.target.value})}>
-            <option value="">İlçe Seçiniz</option>
-            {ISTANBUL_DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
-          </select>
-        </div>
+      <div>
+        <label className="block text-sm font-medium mb-1 dark:text-slate-300">Açıklama</label>
+        <textarea 
+          required 
+          className={inputClass} 
+          rows={4}
+          placeholder="Detayları buraya yazınız..."
+          value={formData.description}
+          onChange={e => setFormData({...formData, description: e.target.value})}
+        />
       </div>
-      <div className="space-y-2">
-        <label className="text-sm font-bold text-slate-700 ml-1">Mesajınız</label>
-        <textarea rows={5} placeholder="Dayanışma ilanı detaylarını buraya yazınız..." className={`${inputStyle} resize-none`} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}></textarea>
+      <div>
+        <label className="block text-sm font-medium mb-1 dark:text-slate-300">İletişim Bilgisi</label>
+        <input 
+          required 
+          className={inputClass} 
+          placeholder="Telefon veya E-posta"
+          value={formData.contact}
+          onChange={e => setFormData({...formData, contact: e.target.value})}
+        />
       </div>
-      <button type="submit" disabled={isSubmitting} className="w-full py-5 bg-indigo-600 text-white rounded-2xl font-bold text-xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 active:scale-[0.98]">
-        {isSubmitting ? 'Gönderiliyor...' : 'İlanı Yayınla'}
+      <button 
+        type="submit" 
+        disabled={isSubmitting}
+        className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-lg shadow-lg shadow-indigo-200 dark:shadow-none transition-all disabled:opacity-50"
+      >
+        {isSubmitting ? 'Gönderiliyor...' : 'Yayınla'}
       </button>
     </form>
   );
