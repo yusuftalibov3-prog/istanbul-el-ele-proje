@@ -12,32 +12,46 @@ const MessageFeed: React.FC<MessageFeedProps> = ({ messages, onDelete, myMessage
 
   const filtered = messages.filter(m => 
     m.message.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    m.district.toLowerCase().includes(searchTerm.toLowerCase())
+    m.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    m.fullName.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const getRoleBadgeColor = (role: UserRole) => {
+    switch (role) {
+      case UserRole.STUDENT: return 'bg-indigo-100 text-indigo-700';
+      case UserRole.SHOPKEEPER: return 'bg-emerald-100 text-emerald-700';
+      case UserRole.PARENT: return 'bg-blue-100 text-blue-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
 
   return (
-    <div className="space-y-6">
-      <input type="text" placeholder="İlçe veya mesaj ara..." className="w-full p-3 border rounded-2xl" onChange={e => setSearchTerm(e.target.value)} />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map(msg => (
-          <div key={msg.id} className="bg-white p-6 rounded-3xl border shadow-sm relative">
-            <div className="flex justify-between mb-2">
-              <span className="text-xs font-bold text-indigo-600">📍 {msg.district.toUpperCase()}</span>
-              <span className="text-xs text-slate-400">{new Date(msg.createdAt).toLocaleDateString('tr-TR')}</span>
-            </div>
-            <p className="text-slate-800 mb-4">"{msg.message}"</p>
-            <div className="border-t pt-4">
-              <h4 className="text-sm font-bold">{msg.fullName}</h4>
-              <p className="text-xs text-slate-500">{msg.phone}</p>
-            </div>
-            {myMessageIds.includes(msg.id) && (
-              <button onClick={() => onDelete(msg.id)} className="absolute top-2 right-2 text-red-500 text-xs">Sil</button>
-            )}
-          </div>
-        ))}
+    <div className="space-y-10">
+      {/* Arama Çubuğu */}
+      <div className="relative max-w-xl mx-auto md:mx-0">
+        <i className="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input 
+          type="text" 
+          placeholder="İlçe veya mesaj ara..." 
+          className="w-full pl-14 pr-6 py-4 rounded-2xl bg-white border border-slate-200 focus:border-indigo-500 outline-none transition-all shadow-xl shadow-slate-100" 
+          onChange={e => setSearchTerm(e.target.value)} 
+        />
       </div>
-    </div>
-  );
-};
 
-export default MessageFeed;
+      {/* Mesaj Kartları */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filtered.map(msg => (
+          <div key={msg.id} className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-2xl shadow-slate-200/60 flex flex-col hover:border-indigo-200 transition-all group relative min-h-[300px]">
+            
+            {/* Üst Kısım: Rol ve İlçe */}
+            <div className="flex justify-between items-start mb-6">
+              <div className="flex flex-col gap-2">
+                <span className={`px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest w-fit ${getRoleBadgeColor(msg.role)}`}>
+                  {msg.role}
+                </span>
+                <span className="text-sm font-bold text-indigo-600 flex items-center tracking-tight">
+                  <i className="fas fa-map-marker-alt mr-2 text-indigo-400"></i> 
+                  {msg.district?.toUpperCase() || "İSTANBUL"}
+                </span>
+              </div>
+              <div className="flex
