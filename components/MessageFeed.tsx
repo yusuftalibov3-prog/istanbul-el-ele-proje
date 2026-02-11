@@ -12,46 +12,65 @@ const MessageFeed: React.FC<MessageFeedProps> = ({ messages, onDelete, myMessage
 
   const filtered = messages.filter(m => 
     m.message.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    m.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    m.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+    m.district.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const getRoleBadgeColor = (role: UserRole) => {
-    switch (role) {
-      case UserRole.STUDENT: return 'bg-indigo-100 text-indigo-700';
-      case UserRole.SHOPKEEPER: return 'bg-emerald-100 text-emerald-700';
-      case UserRole.PARENT: return 'bg-blue-100 text-blue-700';
-      default: return 'bg-gray-100 text-gray-700';
-    }
-  };
-
   return (
-    <div className="space-y-10">
-      {/* Arama Çubuğu */}
-      <div className="relative max-w-xl mx-auto md:mx-0">
-        <i className="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+    <div className="space-y-12">
+      <div className="relative max-w-2xl">
+        <i className="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-400"></i>
         <input 
           type="text" 
-          placeholder="İlçe veya mesaj ara..." 
-          className="w-full pl-14 pr-6 py-4 rounded-2xl bg-white border border-slate-200 focus:border-indigo-500 outline-none transition-all shadow-xl shadow-slate-100" 
+          placeholder="İlçe veya mesaj içeriği ile arama yapın..." 
+          className="w-full pl-16 pr-6 py-5 rounded-[24px] bg-white border border-slate-100 focus:border-indigo-500 outline-none transition-all shadow-2xl shadow-slate-200/50 text-lg" 
           onChange={e => setSearchTerm(e.target.value)} 
         />
       </div>
 
-      {/* Mesaj Kartları */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filtered.map(msg => (
-          <div key={msg.id} className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-2xl shadow-slate-200/60 flex flex-col hover:border-indigo-200 transition-all group relative min-h-[300px]">
+          <div key={msg.id} className="bg-white rounded-[40px] p-10 border border-slate-50 shadow-2xl shadow-slate-200/40 flex flex-col hover:-translate-y-2 transition-all duration-300 group relative">
             
-            {/* Üst Kısım: Rol ve İlçe */}
-            <div className="flex justify-between items-start mb-6">
-              <div className="flex flex-col gap-2">
-                <span className={`px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest w-fit ${getRoleBadgeColor(msg.role)}`}>
+            <div className="flex justify-between items-start mb-8">
+              <div className="space-y-3">
+                <span className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-2xl text-[11px] font-black uppercase tracking-widest">
                   {msg.role}
                 </span>
-                <span className="text-sm font-bold text-indigo-600 flex items-center tracking-tight">
-                  <i className="fas fa-map-marker-alt mr-2 text-indigo-400"></i> 
-                  {msg.district?.toUpperCase() || "İSTANBUL"}
-                </span>
+                <div className="flex items-center text-indigo-600 font-bold">
+                  <i className="fas fa-map-marker-alt mr-2"></i>
+                  <span className="text-sm tracking-tight">{msg.district.toUpperCase()}</span>
+                </div>
               </div>
-              <div className="flex
+              <span className="text-[11px] font-bold text-slate-300 bg-slate-50 px-3 py-1.5 rounded-xl">
+                {new Date(msg.createdAt).toLocaleDateString('tr-TR')}
+              </span>
+            </div>
+
+            <p className="text-slate-700 text-xl font-medium leading-relaxed flex-grow mb-10 italic">
+              "{msg.message}"
+            </p>
+
+            <div className="pt-8 border-t border-slate-50 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-indigo-600 rounded-[20px] flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-100">
+                  {msg.fullName[0].toUpperCase()}
+                </div>
+                <div>
+                  <h4 className="text-lg font-bold text-slate-900">{msg.fullName}</h4>
+                  <p className="text-sm font-semibold text-slate-400">{msg.phone}</p>
+                </div>
+              </div>
+              {myMessageIds.includes(msg.id) && (
+                <button onClick={() => onDelete(msg.id)} className="w-10 h-10 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                  <i className="fas fa-trash-alt text-sm"></i>
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default MessageFeed;
