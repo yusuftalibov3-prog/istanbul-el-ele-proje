@@ -9,7 +9,7 @@ export interface SolidarityMessage {
   fullName: string;
   phone: string;
   email: string;
-  district: string; // Vercel'in beklediği eksik parça buydu
+  district: string; 
   message: string;
   role: UserRole;
   createdAt: number;
