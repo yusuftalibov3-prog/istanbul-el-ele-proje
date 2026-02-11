@@ -34,7 +34,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ role, onSubmit, isSubmitting 
     
     const phoneRegex = /^05\d{9}$/;
     if (!phoneRegex.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'Geçerli bir Türkiye mobil numarası giriniz (05xx...).';
+      newErrors.phone = 'Geçerli bir Türkiye mobil numarası giriniz.';
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -61,7 +61,6 @@ const MessageForm: React.FC<MessageFormProps> = ({ role, onSubmit, isSubmitting 
           <input
             type="text"
             className={`w-full px-4 py-3 rounded-xl border ${errors.fullName ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-500'} outline-none transition-all`}
-            placeholder="Örn: Ahmet Yılmaz"
             value={formData.fullName}
             onChange={e => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
           />
@@ -86,7 +85,6 @@ const MessageForm: React.FC<MessageFormProps> = ({ role, onSubmit, isSubmitting 
           <input
             type="email"
             className={`w-full px-4 py-3 rounded-xl border ${errors.email ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-500'} outline-none transition-all`}
-            placeholder="ahmet@email.com"
             value={formData.email}
             onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
           />
@@ -114,7 +112,6 @@ const MessageForm: React.FC<MessageFormProps> = ({ role, onSubmit, isSubmitting 
         <textarea
           rows={5}
           className={`w-full px-4 py-3 rounded-xl border ${errors.message ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-500'} outline-none transition-all resize-none`}
-          placeholder="Dayanışma ilanı detaylarını buraya yazınız..."
           value={formData.message}
           onChange={e => setFormData(prev => ({ ...prev, message: e.target.value }))}
         ></textarea>
@@ -124,13 +121,9 @@ const MessageForm: React.FC<MessageFormProps> = ({ role, onSubmit, isSubmitting 
       <button
         type="submit"
         disabled={isSubmitting}
-        className={`w-full py-4 bg-indigo-600 text-white rounded-xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 flex items-center justify-center ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+        className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-lg"
       >
-        {isSubmitting ? (
-          <><i className="fas fa-spinner fa-spin mr-2"></i> Gönderiliyor...</>
-        ) : (
-          'İlanı Yayınla'
-        )}
+        {isSubmitting ? 'Gönderiliyor...' : 'İlanı Yayınla'}
       </button>
     </form>
   );
