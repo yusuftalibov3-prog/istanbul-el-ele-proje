@@ -12,7 +12,8 @@ const MessageFeed: React.FC<MessageFeedProps> = ({ messages, onDelete, myMessage
 
   const filtered = messages.filter(m => 
     m.message.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    m.district.toLowerCase().includes(searchTerm.toLowerCase())
+    m.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    m.fullName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -55,22 +56,8 @@ const MessageFeed: React.FC<MessageFeedProps> = ({ messages, onDelete, myMessage
                 <div className="w-14 h-14 bg-indigo-600 rounded-[20px] flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-100">
                   {msg.fullName[0].toUpperCase()}
                 </div>
-                <div>
-                  <h4 className="text-lg font-bold text-slate-900">{msg.fullName}</h4>
-                  <p className="text-sm font-semibold text-slate-400">{msg.phone}</p>
-                </div>
-              </div>
-              {myMessageIds.includes(msg.id) && (
-                <button onClick={() => onDelete(msg.id)} className="w-10 h-10 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
-                  <i className="fas fa-trash-alt text-sm"></i>
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default MessageFeed;
+                <div className="flex flex-col">
+                  <h4 className="text-lg font-bold text-slate-900 leading-tight">{msg.fullName}</h4>
+                  <div className="mt-1 flex flex-col gap-0.5">
+                    <a href={`tel:${msg.phone}`} className="text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors">
+                      <i className="fas fa-phone-alt text-[10px]
