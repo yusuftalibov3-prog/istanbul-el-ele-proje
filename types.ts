@@ -1,4 +1,3 @@
-
 export enum UserRole {
   STUDENT = 'Öğrenci',
   SHOPKEEPER = 'Esnaf',
@@ -10,6 +9,7 @@ export interface SolidarityMessage {
   fullName: string;
   phone: string;
   email: string;
+  district: string; // Vercel'in beklediği eksik parça buydu
   message: string;
   role: UserRole;
   createdAt: number;
