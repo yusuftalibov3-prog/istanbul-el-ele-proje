@@ -7,122 +7,31 @@ interface MessageFormProps {
   isSubmitting: boolean;
 }
 
-const ISTANBUL_DISTRICTS = [
-  "Adalar", "Arnavutköy", "Ataşehir", "Avcılar", "Bağcılar", "Bahçelievler", "Bakırköy", 
-  "Başakşehir", "Bayrampaşa", "Beşiktaş", "Beykoz", "Beylikdüzü", "Beyoğlu", "Büyükçekmece", 
-  "Çatalca", "Çekmeköy", "Esenler", "Esenyurt", "Eyüpsultan", "Fatih", "Gaziosmanpaşa", 
-  "Güngören", "Kadıköy", "Kağıthane", "Kartal", "Küçükçekmece", "Maltepe", "Pendik", 
-  "Sancaktepe", "Sarıyer", "Silivri", "Sultanbeyli", "Sultangazi", "Şile", "Şişli", 
-  "Tuzla", "Ümraniye", "Üsküdar", "Zeytinburnu"
-];
+const ISTANBUL_DISTRICTS = ["Adalar", "Arnavutköy", "Ataşehir", "Avcılar", "Bağcılar", "Bahçelievler", "Bakırköy", "Başakşehir", "Bayrampaşa", "Beşiktaş", "Beykoz", "Beylikdüzü", "Beyoğlu", "Büyükçekmece", "Çatalca", "Çekmeköy", "Esenler", "Esenyurt", "Eyüpsultan", "Fatih", "Gaziosmanpaşa", "Güngören", "Kadıköy", "Kağıthane", "Kartal", "Küçükçekmece", "Maltepe", "Pendik", "Sancaktepe", "Sarıyer", "Silivri", "Sultanbeyli", "Sultangazi", "Şile", "Şişli", "Tuzla", "Ümraniye", "Üsküdar", "Zeytinburnu"];
 
 const MessageForm: React.FC<MessageFormProps> = ({ role, onSubmit, isSubmitting }) => {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    phone: '',
-    email: '',
-    district: '',
-    message: ''
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-    if (!formData.fullName.trim()) newErrors.fullName = 'İsim Soyisim zorunludur.';
-    if (!formData.message.trim()) newErrors.message = 'Mesaj alanı boş bırakılamaz.';
-    if (!formData.district) newErrors.district = 'Lütfen bir ilçe seçiniz.';
-    
-    const phoneRegex = /^05\d{9}$/;
-    if (!phoneRegex.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'Geçerli bir Türkiye mobil numarası giriniz.';
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Geçerli bir e-posta adresi giriniz.';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
+  const [formData, setFormData] = useState({ fullName: '', phone: '', email: '', district: '', message: '' });
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validate()) {
+    if(formData.fullName && formData.district && formData.message) {
       onSubmit({ ...formData, role });
+    } else {
+      alert("Lütfen tüm alanları doldurun ve ilçenizi seçin.");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1">Ad Soyad</label>
-          <input
-            type="text"
-            className={`w-full px-4 py-3 rounded-xl border ${errors.fullName ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-500'} outline-none transition-all`}
-            value={formData.fullName}
-            onChange={e => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-          />
-          {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
-        </div>
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1">Telefon</label>
-          <input
-            type="tel"
-            className={`w-full px-4 py-3 rounded-xl border ${errors.phone ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-500'} outline-none transition-all`}
-            placeholder="05xx xxx xx xx"
-            value={formData.phone}
-            onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-          />
-          {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1">E-posta</label>
-          <input
-            type="email"
-            className={`w-full px-4 py-3 rounded-xl border ${errors.email ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-500'} outline-none transition-all`}
-            value={formData.email}
-            onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
-          />
-          {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1">İlçe</label>
-          <select
-            className={`w-full px-4 py-3 rounded-xl border ${errors.district ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-500'} outline-none transition-all bg-white`}
-            value={formData.district}
-            onChange={e => setFormData(prev => ({ ...prev, district: e.target.value }))}
-          >
-            <option value="">İlçe Seçiniz</option>
-            {ISTANBUL_DISTRICTS.map(dist => (
-              <option key={dist} value={dist}>{dist}</option>
-            ))}
-          </select>
-          {errors.district && <p className="text-red-500 text-xs mt-1">{errors.district}</p>}
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-1">Mesajınız</label>
-        <textarea
-          rows={5}
-          className={`w-full px-4 py-3 rounded-xl border ${errors.message ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-500'} outline-none transition-all resize-none`}
-          value={formData.message}
-          onChange={e => setFormData(prev => ({ ...prev, message: e.target.value }))}
-        ></textarea>
-        {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
-      </div>
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-lg"
-      >
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <input type="text" placeholder="Ad Soyad" className="w-full p-3 border rounded-xl" value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} />
+      <input type="tel" placeholder="Telefon (05xx...)" className="w-full p-3 border rounded-xl" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+      <input type="email" placeholder="E-posta" className="w-full p-3 border rounded-xl" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+      <select className="w-full p-3 border rounded-xl bg-white" value={formData.district} onChange={e => setFormData({...formData, district: e.target.value})}>
+        <option value="">İlçe Seçiniz</option>
+        {ISTANBUL_DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
+      </select>
+      <textarea placeholder="Mesajınız" className="w-full p-3 border rounded-xl" rows={4} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}></textarea>
+      <button type="submit" disabled={isSubmitting} className="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold">
         {isSubmitting ? 'Gönderiliyor...' : 'İlanı Yayınla'}
       </button>
     </form>
