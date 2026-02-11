@@ -186,6 +186,9 @@ const App: React.FC = () => {
           <div className="border-t border-slate-800 pt-8 text-sm flex flex-col gap-2">
             <p>© 2024 İstanbul Dayanışma Portalı. Tüm hakları saklıdır.</p>
             <p className="text-indigo-400 font-semibold italic">Bu Web Siteyi Yusuf Tolibov Isimli 14 Yaşındaki Genç Girişimci Yapmıştır.</p>
+<a href="mailto:yusuftalibov3@gmail.com" className="text-slate-300 hover:text-white transition-colors text-xs mt-1">
+  İletişim: yusuftalibov3@gmail.com
+</a>
           </div>
         </div>
       </footer>
